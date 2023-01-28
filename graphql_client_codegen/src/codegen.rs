@@ -14,6 +14,7 @@ use proc_macro2::{Ident, Span, TokenStream};
 use quote::quote;
 use selection::*;
 use std::collections::BTreeMap;
+use crate::codegen::shared::keyword_replace;
 
 /// The main code generation function.
 pub(crate) fn response_for_query(
@@ -308,7 +309,8 @@ where
         .fields
         .iter()
         .map(|(name, r#type)| {
-            let field_name = Ident::new(name, Span::call_site());
+            let safe_field_name = keyword_replace(name.to_snake_case());
+            let field_name = Ident::new(&safe_field_name, Span::call_site());
             let provided_value = object_map.get(name);
             match provided_value {
                 Some(default_value) => {
