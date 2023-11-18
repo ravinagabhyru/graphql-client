@@ -210,6 +210,7 @@ impl StoredInputFieldType {
 pub(crate) struct StoredInputType {
     pub(crate) name: String,
     pub(crate) fields: Vec<(String, StoredInputFieldType)>,
+    pub(crate) is_one_of: bool,
 }
 
 /// Intermediate representation for a parsed GraphQL schema used during code generation.
@@ -324,6 +325,12 @@ impl Schema {
         self.stored_objects
             .get(object_id.0 as usize)
             .expect("Schema::get_object")
+    }
+
+    pub(crate) fn get_object_mut(&mut self, object_id: ObjectId) -> &mut StoredObject {
+        self.stored_objects
+            .get_mut(object_id.0 as usize)
+            .expect("Schema::get_object_mut")
     }
 
     pub(crate) fn get_field(&self, field_id: StoredFieldId) -> &StoredField {

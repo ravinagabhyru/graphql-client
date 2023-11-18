@@ -247,7 +247,7 @@ fn ingest_object(schema: &mut Schema, object: &mut FullType) {
                     })
                     .collect()
             })
-            .unwrap_or_else(Vec::new),
+            .unwrap_or_default(),
         fields: field_ids,
     };
 
@@ -296,6 +296,9 @@ fn ingest_input(schema: &mut Schema, input: &mut FullType) {
     let input = super::StoredInputType {
         fields,
         name: input.name.take().expect("Input without a name"),
+        // The one-of input spec is not stable yet, thus the introspection query does not have
+        // `isOneOf`, so this is always false.
+        is_one_of: false,
     };
 
     schema.stored_inputs.push(input);
